@@ -37,7 +37,9 @@
                 $('#log').append('<br>' + $('<div/>').text('Received ask for help from #' + msg.data + ': ' + msg.count).html());
             });
             socket.on('action', function(msg){
+            if (action.type === 'ask_help_event'){
              $('#log').append('<br>' + $('<div/>').text('Received ask for help from #' + msg.student_id + ': ' + msg.count).html());
+             }
             });
 
 
