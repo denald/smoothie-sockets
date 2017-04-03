@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, session, request
-from example.student import StudentNameSpace
-from example.teacher import TeacherNameSpace
+from flask import Flask, render_template
+from student import StudentNameSpace
+from teacher import TeacherNameSpace
 from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room, \
     close_room, rooms, disconnect
 async_mode = None
