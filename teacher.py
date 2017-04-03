@@ -10,7 +10,6 @@ class TeacherNameSpace(Namespace):
 
     def on_connect(self):
         clients.Teacher = [request.sid]
-        emit('my_response', {'data': 'Teacher connected', 'count': 0})
         message = 'Teacher is connected, teacher sid {}'.format(clients.Teacher)
         emit('my_response', {'data': message, 'count': 0})
 
