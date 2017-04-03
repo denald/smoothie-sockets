@@ -17,8 +17,7 @@ class StudentNameSpace(Namespace):
         emit('my_pong')
 
     def on_connect(self):
-        message = {}
-        message['data'] = 'student_id1'
+        message = {'data': 'student_id1'}
         emit('my_response',
              {'data': 'Student connected {}, sudent_id {}'.format(request.sid, message['data']), 'count': 0})
 
@@ -26,7 +25,9 @@ class StudentNameSpace(Namespace):
         print('Client disconnected', request.sid)
 
     def on_action(self, action):
-        if action['type'] == 'ask_help_event':
+        if action['type'] == 'my_ping':
+            emit('action', {'type': 'my_pong'})
+        elif action['type'] == 'ask_help_event':
             if len(clients.Teacher):
                 action['count'] = session.get('receive_count', 0) + 1
                 emit('action', action, room=clients.Teacher[0], namespace='/teacher')

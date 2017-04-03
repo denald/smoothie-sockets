@@ -21,7 +21,7 @@ class TeacherNameSpace(Namespace):
     def on_action(self, action):
         action['count'] = session.get('receive_count', 0) + 1
         if action['type'] == 'my_ping':
-            emit('my_pong')
+            emit('action', {'type': 'my_pong'})
         elif action['type'] == 'global_start_event' or action['type'] == 'global_pause_event':
             emit('action', action, broadcast=True, namespace='/student')
         elif action['type'] in ('student_pause_event', 'student_start_event'):
