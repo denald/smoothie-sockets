@@ -37,9 +37,10 @@
                 $('#log').append('<br>' + $('<div/>').text('Received ask for help from #' + msg.data + ': ' + msg.count).html());
             });
             socket.on('action', function(msg){
-            if (action.type === 'ask_help_event'){
+            if (msg.type === 'ask_help_event'){
              $('#log').append('<br>' + $('<div/>').text('Received ask for help from #' + msg.student_id + ': ' + msg.count).html());
              }
+
             });
 
 
@@ -81,19 +82,19 @@
                 return false;
             });
             $('form#global_start').submit(function(event) {
-                socket.emit('global_start_event');
+                socket.emit('action', {type:'global_start_event'});
                 return false;
             });
             $('form#global_pause').submit(function(event) {
-                socket.emit('global_pause_event');
+                socket.emit('action', {type:'global_pause_event'});
                 return false;
             });
             $('form#pause').submit(function(event) {
-                socket.emit('pause_student', {'data': $('#pause_student').val()});
+                socket.emit('action', {type:'student_pause_event', student_id: $('#pause_student').val()});
                 return false;
             });
             $('form#start').submit(function(event) {
-                socket.emit('start_student', {'data': $('#pause_student').val()});
+                socket.emit('start_student', {'data': $('#start_student').val()});
                 return false;
             });
 

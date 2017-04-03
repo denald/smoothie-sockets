@@ -34,4 +34,4 @@ socketio.on_namespace(StudentNameSpace('/student'))
 
 
 if __name__ == '__main__':
-    socketio.run(app, host="10.128.231.8", debug=True, ssl_context = context)
+    socketio.run(app, host="10.128.231.8", debug=False, ssl_context = context)

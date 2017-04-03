@@ -11,35 +11,19 @@ class TeacherNameSpace(Namespace):
     def on_connect(self):
         clients.Teacher = [request.sid]
         emit('my_response', {'data': 'Teacher connected', 'count': 0})
-        message = 'Teacher is in connected, teacher sid {}'.format(clients.Teacher)
+        message = 'Teacher is connected, teacher sid {}'.format(clients.Teacher)
         emit('my_response', {'data': message, 'count': 0})
 
     def on_disconnect(self):
         print('Client disconnected', request.sid)
         clients.Teacher = []
 
-    def on_global_start_event(self):
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('global_start_event', {'count': session['receive_count']}, broadcast=True, namespace='/student')
-
-    def on_global_pause_event(self):
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('global_pause_event', {'count': session['receive_count']}, broadcast=True, namespace='/student')
-
-    def on_pause_student(self, message):
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('student_pause_event', {'data': message['data'], 'count': session['receive_count']},
-             room=clients.Students[message['data']], namespace='/student')
-
-    def on_start_student(self, message):
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('student_start_event', {'data': message['data'], 'count': session['receive_count']},
-             room=clients.Students[message['data']], namespace='/student')
-
     def on_action(self, action):
         action['count'] = session.get('receive_count', 0) + 1
-        if action['type'] == 'global_start_event' or 'global_pause_event':
+        if action['type'] == 'my_ping':
+            emit('my_pong')
+        elif action['type'] == 'global_start_event' or action['type'] == 'global_pause_event':
             emit('action', action, broadcast=True, namespace='/student')
-        elif action['type'] == 'student_pause_event' or 'student_start_event':
-            emit('action', action,
-                 room=clients.Students[action['student_id']], namespace='/student')
+        elif action['type'] in ('student_pause_event', 'student_start_event'):
+            if action['student_id'] in clients.Students:
+                emit('action', action, room=clients.Students[action['student_id']], namespace='/student')
