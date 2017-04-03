@@ -26,6 +26,16 @@ class StudentNameSpace(Namespace):
     def on_disconnect(self):
         print('Client disconnected', request.sid)
 
+    def on_action(self, action):
+        if action['type'] == 'ask_help_event':
+            if len(clients.Teacher):
+                session['receive_count'] = session.get('receive_count', 0) + 1
+                emit('my_response', {'data': 'I"m asking for helpIN ROOM {} '.format(clients.Teacher)})
+                emit('ask_help_event', {'data': message['data'], 'count': session['receive_count']},
+                     room=clients.Teacher[0], namespace='/teacher')
+            else:
+                emit('my_response', {'data': 'Teacher is disconnected'})
+
     def on_ask_help_event(self, message):
         if len(clients.Teacher):
             session['receive_count'] = session.get('receive_count', 0) + 1

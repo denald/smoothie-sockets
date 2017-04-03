@@ -35,3 +35,11 @@ class TeacherNameSpace(Namespace):
         session['receive_count'] = session.get('receive_count', 0) + 1
         emit('student_start_event', {'data': message['data'], 'count': session['receive_count']},
              room=clients.Students[message['data']], namespace='/student')
+
+    def on_action(self, action):
+        action['count'] = session.get('receive_count', 0) + 1
+        if action['type'] == 'global_start_event' or 'global_pause_event':
+            emit('action', action, broadcast=True, namespace='/student')
+        elif action['type'] == 'student_pause_event' or 'student_start_event':
+            emit('action', action,
+                 room=clients.Students[action['student_id']], namespace='/student')
