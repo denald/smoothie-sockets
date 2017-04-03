@@ -2,9 +2,10 @@
 from flask import Flask, render_template
 from student import StudentNameSpace
 from teacher import TeacherNameSpace
-from flask_socketio import SocketIO, Namespace, emit, join_room, leave_room, \
-    close_room, rooms, disconnect
+from flask_socketio import SocketIO
 async_mode = None
+
+context = ('../certs/server.crt', '../certs/server.key')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -33,4 +34,4 @@ socketio.on_namespace(StudentNameSpace('/student'))
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, host="10.128.231.8", debug=True, ssl_context = context)
